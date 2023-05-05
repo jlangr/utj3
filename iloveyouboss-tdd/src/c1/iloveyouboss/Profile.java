@@ -1,16 +1,13 @@
 package iloveyouboss;
 
 public class Profile {
-    private Answer answer;
+    Boolean answer = null;
 
     public boolean matches(Criterion criterion) {
-        return false;
+        return answer != null && criterion.expectedAnswer() == answer.booleanValue();
     }
 
-    public void add(Answer answer) {
+    public void answer(BooleanQuestion question, boolean answer) {
         this.answer = answer;
-    }
-
-    public void answer(BooleanQuestion question, boolean b) {
     }
 }

@@ -1,6 +1,3 @@
 package iloveyouboss;
 
-public class BooleanQuestion {
-    public BooleanQuestion(int number, String text) {
-    }
-}
+public record BooleanQuestion(int id, String text) {}

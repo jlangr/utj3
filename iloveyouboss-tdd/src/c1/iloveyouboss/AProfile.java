@@ -31,20 +31,31 @@ class AProfile {
     // Profiles might not answer all questions!
 
     @Test
-    void matchesNothingWhenProfileEmpty() {
+    void doesNotMatchCriterionWhenProfileEmpty() {
         var criterion = new Criterion(hasReloQuestion, true);
 
         boolean result = profile.matches(criterion);
 
         assertFalse(result);
     }
-//    @Test
-//    void matchesWhenProfileContainsMatchingAnswer() {
-//        var criterion = new Criterion(hasReloQuestion, true);
-//        profile.answer(hasReloQuestion, true);
-//
-//        boolean result = profile.matches(criterion);
-//
-//        assertTrue(result);
-//    }
+
+    @Test
+    void matchesCriterionWhenProfileContainsMatchingAnswer() {
+        var criterion = new Criterion(hasReloQuestion, true);
+        profile.answer(hasReloQuestion, true);
+
+        boolean result = profile.matches(criterion);
+
+        assertTrue(result);
+    }
+
+    @Test
+    void doesNotMatchCriterionWhenProfileContainsMismatchedAnswer() {
+        var criterion = new Criterion(hasReloQuestion, true);
+        profile.answer(hasReloQuestion, false);
+
+        boolean result = profile.matches(criterion);
+
+        assertFalse(result);
+    }
 }
