@@ -3,6 +3,9 @@ package iloveyouboss;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -34,7 +37,7 @@ class AProfile {
     void doesNotMatchCriterionWhenProfileEmpty() {
         var criterion = new Criterion(hasReloQuestion, true);
 
-        boolean result = profile.matches(criterion);
+        boolean result = profile.matches(List.of(criterion));
 
         assertFalse(result);
     }
@@ -44,7 +47,7 @@ class AProfile {
         var criterion = new Criterion(hasReloQuestion, true);
         profile.answer(hasReloQuestion, true);
 
-        boolean result = profile.matches(criterion);
+        boolean result = profile.matches(List.of(criterion));
 
         assertTrue(result);
     }
@@ -54,8 +57,19 @@ class AProfile {
         var criterion = new Criterion(hasReloQuestion, true);
         profile.answer(hasReloQuestion, false);
 
-        boolean result = profile.matches(criterion);
+        boolean result = profile.matches(List.of(criterion));
 
         assertFalse(result);
+    }
+
+    @Test
+    void matchesCriterionAgainstProfileWithMultipleAnswers() {
+        var criterion = new Criterion(hasReloQuestion, true);
+        profile.answer(hasReloQuestion, true);
+        profile.answer(new BooleanQuestion(2, "Has 401K?"), false);
+
+        boolean result = profile.matches(List.of(criterion));
+
+        assertTrue(result);
     }
 }
