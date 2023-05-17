@@ -8,13 +8,15 @@ public class Profile {
     Map<Integer,Answer> answers = new HashMap<>();
 
     public boolean matches(List<Criterion> criteria) {
-        return criteria.stream().allMatch(criterion -> {
-            var answer = answers.get(criterion.question().id());
-            return criterion.isMetBy(answer);
-        });
+        return criteria.stream().allMatch(
+                criterion -> criterion.isMetBy(answerFor(criterion)));
     }
 
     public void answer(BooleanQuestion question, boolean answer) {
         answers.put(question.id(), new Answer(answer));
+    }
+
+    public Answer answerFor(Criterion criterion) {
+        return answers.get(criterion.question().id());
     }
 }
