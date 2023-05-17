@@ -13,6 +13,8 @@ public class Profile {
     }
 
     public void answer(BooleanQuestion question, boolean answer) {
+        if (answers.containsKey(question.id()))
+            throw new DuplicateQuestionException();
         answers.put(question.id(), new Answer(answer));
     }
 

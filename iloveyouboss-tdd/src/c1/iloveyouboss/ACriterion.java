@@ -9,21 +9,21 @@ class ACriterion {
     BooleanQuestion question = new BooleanQuestion(1, "?");
 
     @Test
-    void isNotMetByAnswerWhenAnswerIsNull() {
+    void isNotMetByNullAnswer() {
         var criterion = new Criterion(question, true);
 
         assertFalse(criterion.isMetBy(null));
     }
 
     @Test
-    void isMetByAnswerWhenExpectedAnswerMatches() {
+    void isMetByAnswerMatchingItsExpectedAnswer() {
         var criterion = new Criterion(question, true);
 
         assertTrue(criterion.isMetBy(new Answer(true)));
     }
 
     @Test
-    void isNotMetByAnswerWhenExpectedAnswerDoesNotMatch() {
+    void isNotMetByAnswerMismatchingItsExpectedAnswer() {
         var criterion = new Criterion(question, true);
 
         assertFalse(criterion.isMetBy(new Answer(false)));

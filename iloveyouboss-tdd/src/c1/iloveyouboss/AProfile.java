@@ -1,5 +1,6 @@
 package iloveyouboss;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
@@ -22,6 +23,7 @@ class AProfile {
 
     // A question consists of text and type (e.g. boolean -> yes/no)
     // Questions are uniquely identified by their ID.
+    // (The ID is likely generated in some service-level code.)
     // An answer is a question plus the value that is true
     // A profile is a bunch of Answers (to questions).
          // e.g.  Does a relocation package exist -> yes
@@ -40,20 +42,14 @@ class AProfile {
             assertFalse(profile.matches(List.of(criterion)));
         }
 
-        // test that answer method throws when given a duplicate question?
-
-        // test when criterion does not have answer
-
         @Test
         void doesNotMatchWhenAllCriteriaNotMet() {
             profile.answer(hasRelo, true);
             profile.answer(has401K, false);
 
-            boolean result = profile.matches(
+            assertFalse(profile.matches(
                     List.of(new Criterion(has401K, true),
-                            new Criterion(hasRelo, true)));
-
-            assertFalse(result);
+                            new Criterion(hasRelo, true))));
         }
 
         @Test
@@ -61,11 +57,9 @@ class AProfile {
             profile.answer(hasRelo, true);
             profile.answer(has401K, true);
 
-            boolean result = profile.matches(
+            assertTrue(profile.matches(
                     List.of(new Criterion(has401K, true),
-                            new Criterion(hasRelo, true)));
-
-            assertTrue(result);
+                            new Criterion(hasRelo, true))));
         }
     }
 
@@ -85,6 +79,15 @@ class AProfile {
             var answer = profile.answerFor(criterion);
 
             assertEquals(answer.value(), true);
+        }
+
+        @Test
+        void throwsWhenAddingDuplicateAnswer() {
+            profile.answer(has401K, true);
+            var questionWithDuplicateId = new BooleanQuestion(has401K.id(), "?");
+
+            Assertions.assertThrows(DuplicateQuestionException.class,
+                    () -> profile.answer(questionWithDuplicateId, false));
         }
     }
 }
