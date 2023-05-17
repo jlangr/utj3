@@ -5,15 +5,16 @@ import java.util.List;
 import java.util.Map;
 
 public class Profile {
-    Map<Integer,Boolean> answers = new HashMap<>();
+    Map<Integer,Answer> answers = new HashMap<>();
 
     public boolean matches(List<Criterion> criteria) {
-        var criterion = criteria.get(0);
-        var answer = answers.get(criterion.question().id());
-        return answer != null && criterion.expectedAnswer() == answer.booleanValue();
+        return criteria.stream().allMatch(criterion -> {
+            var answer = answers.get(criterion.question().id());
+            return criterion.isMetBy(answer);
+        });
     }
 
     public void answer(BooleanQuestion question, boolean answer) {
-        answers.put(question.id(), answer);
+        answers.put(question.id(), new Answer(answer));
     }
 }

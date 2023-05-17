@@ -3,7 +3,6 @@ package iloveyouboss;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -11,12 +10,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AProfile {
     Profile profile;
-    BooleanQuestion hasReloQuestion;
+    BooleanQuestion hasRelo;
+    BooleanQuestion has401K;
 
     @BeforeEach
     void create() {
         profile = new Profile();
-        hasReloQuestion = new BooleanQuestion(1, "Has relocation package?");
+        hasRelo = new BooleanQuestion(1, "Has relocation package?");
+        has401K = new BooleanQuestion(2, "Has 401K?");
     }
 
 
@@ -35,7 +36,7 @@ class AProfile {
 
     @Test
     void doesNotMatchCriterionWhenProfileEmpty() {
-        var criterion = new Criterion(hasReloQuestion, true);
+        var criterion = new Criterion(hasRelo, true);
 
         boolean result = profile.matches(List.of(criterion));
 
@@ -44,31 +45,49 @@ class AProfile {
 
     @Test
     void matchesCriterionWhenProfileContainsMatchingAnswer() {
-        var criterion = new Criterion(hasReloQuestion, true);
-        profile.answer(hasReloQuestion, true);
+        var criterion = new Criterion(hasRelo, true);
+        profile.answer(hasRelo, true);
 
         boolean result = profile.matches(List.of(criterion));
 
         assertTrue(result);
     }
 
+
     @Test
-    void doesNotMatchCriterionWhenProfileContainsMismatchedAnswer() {
-        var criterion = new Criterion(hasReloQuestion, true);
-        profile.answer(hasReloQuestion, false);
+    void matchesCriterionAgainstProfileWithMultipleAnswers() {
+        var criterion = new Criterion(hasRelo, true);
+        profile.answer(hasRelo, true);
+        profile.answer(new BooleanQuestion(2, "Has 401K?"), false);
 
         boolean result = profile.matches(List.of(criterion));
+
+        assertTrue(result);
+    }
+
+    // test that answer method throws when given a duplicate question?
+
+
+    @Test
+    void doesNotMatchWhenAnyCriterionNotMet() {
+        profile.answer(hasRelo, true);
+        profile.answer(has401K, false);
+
+        boolean result = profile.matches(
+                List.of(new Criterion(has401K, true),
+                        new Criterion(hasRelo, true)));
 
         assertFalse(result);
     }
 
     @Test
-    void matchesCriterionAgainstProfileWithMultipleAnswers() {
-        var criterion = new Criterion(hasReloQuestion, true);
-        profile.answer(hasReloQuestion, true);
-        profile.answer(new BooleanQuestion(2, "Has 401K?"), false);
+    void matchesWhenAllCriterionNotMet() {
+        profile.answer(hasRelo, true);
+        profile.answer(has401K, true);
 
-        boolean result = profile.matches(List.of(criterion));
+        boolean result = profile.matches(
+                List.of(new Criterion(has401K, true),
+                        new Criterion(hasRelo, true)));
 
         assertTrue(result);
     }

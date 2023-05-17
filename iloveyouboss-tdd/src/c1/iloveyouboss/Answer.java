@@ -1,3 +1,7 @@
 package iloveyouboss;
 
-public record Answer(BooleanQuestion question, boolean value) {}
+public record Answer(boolean value) {
+    public boolean matches(Criterion criterion) {
+        return criterion.expectedAnswer() == this.value();
+    }
+}
