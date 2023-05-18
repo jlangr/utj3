@@ -1,15 +1,15 @@
 package iloveyouboss;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Profile {
     Map<Integer,Answer> answers = new HashMap<>();
 
-    public boolean matches(List<Criterion> criteria) {
-        return criteria.stream().allMatch(
-                criterion -> criterion.isMetBy(answerFor(criterion)));
+    public boolean matches(Criteria criteria) {
+        return criteria.stream()
+                .filter(criterion -> !criterion.isOptional())
+                .allMatch(criterion -> criterion.isMetBy(answerFor(criterion)));
     }
 
     public void answer(BooleanQuestion question, boolean answer) {
@@ -20,5 +20,9 @@ public class Profile {
 
     public Answer answerFor(Criterion criterion) {
         return answers.get(criterion.question().id());
+    }
+
+    public int score(Criteria criteria) {
+        return 0;
     }
 }

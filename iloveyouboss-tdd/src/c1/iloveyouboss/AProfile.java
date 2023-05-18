@@ -1,45 +1,44 @@
 package iloveyouboss;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+/* basis for explanatory prose:
+ A Question consists of text and type (e.g. boolean -> yes/no)
+     Questions are uniquely identified by their ID. (The ID is likely generated in some service-level code.)
+
+ An Answer is a question plus the value that is true
+
+ A Profile is a bunch of Answers (to Questions). eg: Does a relocation package exist -> yes
+     A Profile might not have an Answer to any given Question.
+
+ A Criterion is a Question plus the desired Answer to that question.
+ Criterion might be optional.
+ An interested party sets up criteria ("many criterion") to determine to what extent they match a profile.
+
+ */
+
+// TODO: other types of questions
+
 class AProfile {
-    Profile profile;
-    BooleanQuestion hasRelo;
-    BooleanQuestion has401K;
+    Profile profile = new Profile();
+    BooleanQuestion hasRelo = new BooleanQuestion(1, "Has relocation package?");
+    BooleanQuestion has401K = new BooleanQuestion(2, "Has 401K?");
+    BooleanQuestion hasSmelt = new BooleanQuestion(3, "got smelt?");
 
-    @BeforeEach
-    void create() {
-        profile = new Profile();
-        hasRelo = new BooleanQuestion(1, "Has relocation package?");
-        has401K = new BooleanQuestion(2, "Has 401K?");
-    }
-
-    // A question consists of text and type (e.g. boolean -> yes/no)
-    // Questions are uniquely identified by their ID.
-    // (The ID is likely generated in some service-level code.)
-    // An answer is a question plus the value that is true
-    // A profile is a bunch of Answers (to questions).
-         // e.g.  Does a relocation package exist -> yes
-         // Each question answered by a profile is referenced by its ID.
-    // A criterion is a question, the desired answer, and (later) a weighting.
-    // An interested party sets up criteria ("many criterion") to determine to what extent they match a profile.
-    // We will start by asking whether or not a single criterion matches a profile.
-    // Profiles might not answer all questions!
+    Criterion hasReloMustBeTrue = new Criterion(hasRelo, true);
+    Criterion has401KMustBeTrue = new Criterion(has401K, true);
+    Criterion optionallyHasSmeltShouldBeTrue = new Criterion(hasSmelt, true, true);
 
     @Nested
     class WhenDeterminingMatches {
         @Test
         void doesNotMatchWhenProfileHasNoAnswers() {
-            var criterion = new Criterion(hasRelo, true);
+            var criteria = new Criteria(new Criterion(hasRelo, true));
 
-            assertFalse(profile.matches(List.of(criterion)));
+            assertFalse(profile.matches(criteria));
         }
 
         @Test
@@ -48,18 +47,37 @@ class AProfile {
             profile.answer(has401K, false);
 
             assertFalse(profile.matches(
-                    List.of(new Criterion(has401K, true),
-                            new Criterion(hasRelo, true))));
+                    new Criteria(hasReloMustBeTrue, has401KMustBeTrue)));
         }
 
-        @Test
-        void matchesWhenAllCriteriaMet() {
-            profile.answer(hasRelo, true);
-            profile.answer(has401K, true);
+        @Nested
+        class WithAllQuestionsAnsweredTrue {
+            @Test
+            void matchesWhenAllCriteriaMet() {
+                profile.answer(hasRelo, true);
+                profile.answer(has401K, true);
 
-            assertTrue(profile.matches(
-                    List.of(new Criterion(has401K, true),
-                            new Criterion(hasRelo, true))));
+                assertTrue(profile.matches(new Criteria(hasReloMustBeTrue, has401KMustBeTrue)));
+            }
+
+            @Test
+            void matchesDespiteUnmetOptionalCriterion() {
+                var optionalCriterion = new Criterion(hasSmelt, true, true);
+                var criteria = new Criteria(hasReloMustBeTrue, optionalCriterion);
+                profile.answer(hasSmelt, false);
+                profile.answer(hasRelo, true);
+
+                assertTrue(profile.matches(criteria));
+            }
+
+            // TDD would not usually demand this test
+            @Test
+            void stillMatchesWithOnlyMismatchedOptionalCriteria() {
+                var criteria = new Criteria(optionallyHasSmeltShouldBeTrue);
+                profile.answer(hasSmelt, false);
+
+                assertTrue(profile.matches(criteria));
+            }
         }
     }
 
@@ -67,8 +85,7 @@ class AProfile {
     class WhenManagingAnswers {
         @Test
         void returnsNullWhenAskedForNonexistentAnswer() {
-            var criterion = new Criterion(has401K, true);
-            assertNull(profile.answerFor(criterion));
+            assertNull(profile.answerFor(has401KMustBeTrue));
         }
 
         @Test
@@ -86,8 +103,24 @@ class AProfile {
             profile.answer(has401K, true);
             var questionWithDuplicateId = new BooleanQuestion(has401K.id(), "?");
 
-            Assertions.assertThrows(DuplicateQuestionException.class,
+            assertThrows(DuplicateQuestionException.class,
                     () -> profile.answer(questionWithDuplicateId, false));
+        }
+    }
+
+    @Nested
+    class Score {
+        @Test
+        void isZeroWhenNoCriteriaMet() {
+            var criteria = new Criteria(hasReloMustBeTrue);
+            assertEquals(0, profile.score(criteria));
+        }
+
+        @Test
+        void isCriteriaWeightWhenSoleCriterionMet() {
+            var criteria = new Criteria(hasReloMustBeTrue);
+
+            assertEquals(0, profile.score(criteria));
         }
     }
 }
