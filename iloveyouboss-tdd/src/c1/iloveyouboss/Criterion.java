@@ -1,7 +1,7 @@
 package iloveyouboss;
 
-public record Criterion(BooleanQuestion question, boolean expectedAnswer, boolean isOptional) {
-    public Criterion(BooleanQuestion question, boolean expectedAnswer) {
+public record Criterion(Question question, boolean expectedAnswer, boolean isOptional) {
+    public Criterion(Question question, boolean expectedAnswer) {
         this(question, expectedAnswer, false);
     }
 
