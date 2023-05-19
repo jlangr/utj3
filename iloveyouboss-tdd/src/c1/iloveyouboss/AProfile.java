@@ -1,15 +1,18 @@
 package iloveyouboss;
 
+import iloveyouboss.questions.Question;
+import iloveyouboss.questions.YesNoQuestion;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
 
+import static iloveyouboss.answers.TrueFalse.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /* basis for explanatory prose:
  A Question consists of text and type (e.g. boolean -> yes/no)
      Questions are uniquely identified by their ID. (The ID is likely generated in some service-level code.)
 
- An Answer is a question plus the value that is true
+ An Answer is a question plus the stringValue that is true
 
  A Profile is a bunch of Answers (to Questions). eg: Does a relocation package exist -> yes
      A Profile might not have an Answer to any given Question.
@@ -24,48 +27,48 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AProfile {
     Profile profile = new Profile();
-    Question hasRelo = new BooleanQuestion(1, "Has relocation package?");
-    Question has401K = new BooleanQuestion(2, "Has 401K?");
-    Question hasSmelt = new BooleanQuestion(3, "got smelt?");
+    Question hasRelo = new YesNoQuestion(1, "Has relocation package?");
+    Question has401K = new YesNoQuestion(2, "Has 401K?");
+    Question hasSmelt = new YesNoQuestion(3, "got smelt?");
 
-    Criterion hasReloMustBeTrue = new Criterion(hasRelo, new TrueAnswer());
-    Criterion has401KMustBeTrue = new Criterion(has401K, new TrueAnswer());
-    Criterion optionallyHasSmeltShouldBeTrue = new Criterion(hasSmelt, new TrueAnswer(), true);
+    Criterion mustHaveRelo = new Criterion(hasRelo, True);
+    Criterion mustHave401K = new Criterion(has401K, True);
+    Criterion optionallyHasSmeltShouldBeTrue = new Criterion(hasSmelt, True, true);
 
     @Nested
     class WhenDeterminingMatches {
         @Test
         void doesNotMatchWhenProfileHasNoAnswers() {
-            var criteria = new Criteria(new Criterion(hasRelo, new TrueAnswer()));
+            var criteria = new Criteria(new Criterion(hasRelo, True));
 
             assertFalse(profile.matches(criteria));
         }
 
         @Test
         void doesNotMatchWhenAllCriteriaNotMet() {
-            profile.answer(hasRelo, new TrueAnswer());
-            profile.answer(has401K, new FalseAnswer());
+            profile.answer(hasRelo, True);
+            profile.answer(has401K, False);
 
             assertFalse(profile.matches(
-                    new Criteria(hasReloMustBeTrue, has401KMustBeTrue)));
+                    new Criteria(mustHaveRelo, mustHave401K)));
         }
 
         @Nested
         class WithAllQuestionsAnsweredTrue {
             @Test
             void matchesWhenAllCriteriaMet() {
-                profile.answer(hasRelo, new TrueAnswer());
-                profile.answer(has401K, new TrueAnswer());
+                profile.answer(hasRelo, True);
+                profile.answer(has401K, True);
 
-                assertTrue(profile.matches(new Criteria(hasReloMustBeTrue, has401KMustBeTrue)));
+                assertTrue(profile.matches(new Criteria(mustHaveRelo, mustHave401K)));
             }
 
             @Test
             void matchesDespiteUnmetOptionalCriterion() {
-                var optionalCriterion = new Criterion(hasSmelt, new TrueAnswer(), true);
-                var criteria = new Criteria(hasReloMustBeTrue, optionalCriterion);
-                profile.answer(hasSmelt, new FalseAnswer());
-                profile.answer(hasRelo, new TrueAnswer());
+                var optionalCriterion = new Criterion(hasSmelt, True, true);
+                var criteria = new Criteria(mustHaveRelo, optionalCriterion);
+                profile.answer(hasSmelt, False);
+                profile.answer(hasRelo, True);
 
                 assertTrue(profile.matches(criteria));
             }
@@ -74,7 +77,7 @@ class AProfile {
             @Test
             void stillMatchesWithOnlyMismatchedOptionalCriteria() {
                 var criteria = new Criteria(optionallyHasSmeltShouldBeTrue);
-                profile.answer(hasSmelt, new FalseAnswer());
+                profile.answer(hasSmelt, False);
 
                 assertTrue(profile.matches(criteria));
             }
@@ -85,26 +88,26 @@ class AProfile {
     class WhenManagingAnswers {
         @Test
         void returnsNullWhenAskedForNonexistentAnswer() {
-            assertNull(profile.answerFor(has401KMustBeTrue));
+            assertNull(profile.answerFor(mustHave401K));
         }
 
         @Test
         void returnsAnswerForCorrespondingCriterionQuestion() {
-            profile.answer(has401K, new TrueAnswer());
-            var criterion = new Criterion(has401K, new TrueAnswer());
+            profile.answer(has401K, True);
+            var criterion = new Criterion(has401K, True);
 
-            var value = profile.answerFor(criterion);
+            var answer = profile.answerFor(criterion);
 
-            assertEquals(value.answer(), true);
+            assertEquals(answer, True);
         }
 
         @Test
         void throwsWhenAddingDuplicateAnswer() {
-            profile.answer(has401K, new TrueAnswer());
-            var questionWithDuplicateId = new BooleanQuestion(has401K.id(), "?");
+            profile.answer(has401K, True);
+            var questionWithDuplicateId = new YesNoQuestion(has401K.id(), "?");
 
             assertThrows(DuplicateQuestionException.class,
-                    () -> profile.answer(questionWithDuplicateId, new FalseAnswer()));
+                    () -> profile.answer(questionWithDuplicateId, False));
         }
     }
 
@@ -112,13 +115,13 @@ class AProfile {
     class Score {
         @Test
         void isZeroWhenNoCriteriaMet() {
-            var criteria = new Criteria(hasReloMustBeTrue);
+            var criteria = new Criteria(mustHaveRelo);
             assertEquals(0, profile.score(criteria));
         }
 
         @Test
         void isCriteriaWeightWhenSoleCriterionMet() {
-            var criteria = new Criteria(hasReloMustBeTrue);
+            var criteria = new Criteria(mustHaveRelo);
 
             assertEquals(0, profile.score(criteria));
         }

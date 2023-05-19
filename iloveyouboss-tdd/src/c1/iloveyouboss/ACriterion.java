@@ -1,37 +1,42 @@
 package iloveyouboss;
 
+import iloveyouboss.questions.ChoiceQuestion;
+import iloveyouboss.questions.Question;
+import iloveyouboss.questions.YesNoQuestion;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
 
 import java.util.List;
 
+import static iloveyouboss.answers.TrueFalse.False;
+import static iloveyouboss.answers.TrueFalse.True;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ACriterion {
     @Nested
     class WithABooleanQuestion {
-        Question question = new BooleanQuestion(1, "?");
+        Question question = new YesNoQuestion(1, "?");
 
         @Test
         void isNotMetByNullAnswer() {
-            var criterion = new Criterion(question, new TrueAnswer());
+            var criterion = new Criterion(question, True);
 
             assertFalse(criterion.isMetBy(null));
         }
 
         @Test
         void isMetByAnswerMatchingItsExpectedAnswer() {
-            var criterion = new Criterion(question, new TrueAnswer());
+            var criterion = new Criterion(question, True);
 
-            assertTrue(criterion.isMetBy(new TrueAnswer()));
+            assertTrue(criterion.isMetBy(True));
         }
 
         @Test
         void isNotMetByAnswerMismatchingItsExpectedAnswer() {
-            var criterion = new Criterion(question, new TrueAnswer());
+            var criterion = new Criterion(question, True);
 
-            assertFalse(criterion.isMetBy(new FalseAnswer()));
+            assertFalse(criterion.isMetBy(False));
         }
     }
 

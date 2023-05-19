@@ -1,4 +1,4 @@
-package iloveyouboss;
+package iloveyouboss.questions;
 
 import java.util.List;
 

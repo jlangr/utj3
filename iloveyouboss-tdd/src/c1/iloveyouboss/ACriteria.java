@@ -1,16 +1,19 @@
 package iloveyouboss;
 
+import iloveyouboss.questions.YesNoQuestion;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static iloveyouboss.answers.TrueFalse.False;
+import static iloveyouboss.answers.TrueFalse.True;
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ACriteria {
-    Criterion criterion1 = new Criterion(new BooleanQuestion(1, "?"), new TrueAnswer());
-    Criterion criterion2 = new Criterion(new BooleanQuestion(2, "?"), new FalseAnswer());
-    Criterion criterion3 = new Criterion(new BooleanQuestion(3, "?"), new FalseAnswer());
+    Criterion criterion1 = new Criterion(new YesNoQuestion(1, "?"), True);
+    Criterion criterion2 = new Criterion(new YesNoQuestion(2, "?"), False);
+    Criterion criterion3 = new Criterion(new YesNoQuestion(3, "?"), False);
 
     @Test
     void holdsACollectionOfCriterion() {
@@ -23,9 +26,7 @@ class ACriteria {
     void canBeConstructedWithVarargs() {
         var criteria = new Criteria(criterion1, criterion2);
 
-        List<Criterion> asCollectedFromStream = listOfCriterion(criteria);
-
-        assertEquals(asCollectedFromStream, List.of(criterion1, criterion2));
+        assertEquals(listOfCriterion(criteria), List.of(criterion1, criterion2));
     }
 
     @Test
