@@ -8,9 +8,9 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ACriteria {
-    Criterion criterion1 = new Criterion(new BooleanQuestion(1, "?"), true);
-    Criterion criterion2 = new Criterion(new BooleanQuestion(2, "?"), false);
-    Criterion criterion3 = new Criterion(new BooleanQuestion(3, "?"), false);
+    Criterion criterion1 = new Criterion(new BooleanQuestion(1, "?"), new TrueAnswer());
+    Criterion criterion2 = new Criterion(new BooleanQuestion(2, "?"), new FalseAnswer());
+    Criterion criterion3 = new Criterion(new BooleanQuestion(3, "?"), new FalseAnswer());
 
     @Test
     void holdsACollectionOfCriterion() {

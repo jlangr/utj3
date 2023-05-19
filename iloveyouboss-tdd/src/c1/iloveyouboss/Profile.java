@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Profile {
-    Map<Integer,Answer> answers = new HashMap<>();
+    Map<Integer,Value> answers = new HashMap<>();
 
     public boolean matches(Criteria criteria) {
         return criteria.stream()
@@ -12,13 +12,13 @@ public class Profile {
                 .allMatch(criterion -> criterion.isMetBy(answerFor(criterion)));
     }
 
-    public void answer(Question question, boolean answer) {
+    public void answer(Question question, Value answer) {
         if (answers.containsKey(question.id()))
             throw new DuplicateQuestionException();
-        answers.put(question.id(), new Answer(answer));
+        answers.put(question.id(), answer);
     }
 
-    public Answer answerFor(Criterion criterion) {
+    public Value answerFor(Criterion criterion) {
         return answers.get(criterion.question().id());
     }
 

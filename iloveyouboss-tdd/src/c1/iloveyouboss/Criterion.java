@@ -1,11 +1,11 @@
 package iloveyouboss;
 
-public record Criterion(Question question, boolean expectedAnswer, boolean isOptional) {
-    public Criterion(Question question, boolean expectedAnswer) {
+public record Criterion(Question question, Value expectedAnswer, boolean isOptional) {
+    public Criterion(Question question, Value expectedAnswer) {
         this(question, expectedAnswer, false);
     }
 
-    public boolean isMetBy(Answer answer) {
-        return answer != null && expectedAnswer() == answer.value();
+    public boolean isMetBy(Value answer) {
+        return answer != null && expectedAnswer().answer().equals(answer.answer());
     }
 }
