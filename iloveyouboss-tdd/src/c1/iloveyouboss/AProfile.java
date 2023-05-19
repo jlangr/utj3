@@ -24,9 +24,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AProfile {
     Profile profile = new Profile();
-    BooleanQuestion hasRelo = new BooleanQuestion(1, "Has relocation package?");
-    BooleanQuestion has401K = new BooleanQuestion(2, "Has 401K?");
-    BooleanQuestion hasSmelt = new BooleanQuestion(3, "got smelt?");
+    Question hasRelo = new BooleanQuestion(1, "Has relocation package?");
+    Question has401K = new BooleanQuestion(2, "Has 401K?");
+    Question hasSmelt = new BooleanQuestion(3, "got smelt?");
 
     Criterion hasReloMustBeTrue = new Criterion(hasRelo, true);
     Criterion has401KMustBeTrue = new Criterion(has401K, true);

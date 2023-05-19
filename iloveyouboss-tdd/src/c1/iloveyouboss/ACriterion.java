@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ACriterion {
     @Nested
     class WithABooleanQuestion {
-        BooleanQuestion question = new BooleanQuestion(1, "?");
+        Question question = new BooleanQuestion(1, "?");
 
         @Test
         void isNotMetByNullAnswer() {

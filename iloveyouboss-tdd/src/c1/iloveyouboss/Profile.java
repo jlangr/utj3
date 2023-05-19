@@ -12,7 +12,7 @@ public class Profile {
                 .allMatch(criterion -> criterion.isMetBy(answerFor(criterion)));
     }
 
-    public void answer(BooleanQuestion question, boolean answer) {
+    public void answer(Question question, boolean answer) {
         if (answers.containsKey(question.id()))
             throw new DuplicateQuestionException();
         answers.put(question.id(), new Answer(answer));
