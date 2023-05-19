@@ -5,7 +5,7 @@ import iloveyouboss.questions.YesNoQuestion;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
 
-import static iloveyouboss.answers.TrueFalse.*;
+import static iloveyouboss.answers.YesNo.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /* basis for explanatory prose:
@@ -31,44 +31,44 @@ class AProfile {
     Question has401K = new YesNoQuestion(2, "Has 401K?");
     Question hasSmelt = new YesNoQuestion(3, "got smelt?");
 
-    Criterion mustHaveRelo = new Criterion(hasRelo, True);
-    Criterion mustHave401K = new Criterion(has401K, True);
-    Criterion optionallyHasSmeltShouldBeTrue = new Criterion(hasSmelt, True, true);
+    Criterion mustHaveRelo = new Criterion(hasRelo, Yes);
+    Criterion mustHave401K = new Criterion(has401K, Yes);
+    Criterion optionallyHasSmeltShouldBeTrue = new Criterion(hasSmelt, Yes, true);
 
     @Nested
     class WhenDeterminingMatches {
         @Test
         void doesNotMatchWhenProfileHasNoAnswers() {
-            var criteria = new Criteria(new Criterion(hasRelo, True));
+            var criteria = new Criteria(new Criterion(hasRelo, Yes));
 
             assertFalse(profile.matches(criteria));
         }
 
         @Test
         void doesNotMatchWhenAllCriteriaNotMet() {
-            profile.answer(hasRelo, True);
-            profile.answer(has401K, False);
+            profile.answer(hasRelo, Yes);
+            profile.answer(has401K, No);
 
             assertFalse(profile.matches(
                     new Criteria(mustHaveRelo, mustHave401K)));
         }
 
         @Nested
-        class WithAllQuestionsAnsweredTrue {
+        class WithAllQuestionsAnsweredYes {
             @Test
             void matchesWhenAllCriteriaMet() {
-                profile.answer(hasRelo, True);
-                profile.answer(has401K, True);
+                profile.answer(hasRelo, Yes);
+                profile.answer(has401K, Yes);
 
                 assertTrue(profile.matches(new Criteria(mustHaveRelo, mustHave401K)));
             }
 
             @Test
             void matchesDespiteUnmetOptionalCriterion() {
-                var optionalCriterion = new Criterion(hasSmelt, True, true);
+                var optionalCriterion = new Criterion(hasSmelt, Yes, true);
                 var criteria = new Criteria(mustHaveRelo, optionalCriterion);
-                profile.answer(hasSmelt, False);
-                profile.answer(hasRelo, True);
+                profile.answer(hasSmelt, No);
+                profile.answer(hasRelo, Yes);
 
                 assertTrue(profile.matches(criteria));
             }
@@ -77,7 +77,7 @@ class AProfile {
             @Test
             void stillMatchesWithOnlyMismatchedOptionalCriteria() {
                 var criteria = new Criteria(optionallyHasSmeltShouldBeTrue);
-                profile.answer(hasSmelt, False);
+                profile.answer(hasSmelt, No);
 
                 assertTrue(profile.matches(criteria));
             }
@@ -93,21 +93,21 @@ class AProfile {
 
         @Test
         void returnsAnswerForCorrespondingCriterionQuestion() {
-            profile.answer(has401K, True);
-            var criterion = new Criterion(has401K, True);
+            profile.answer(has401K, Yes);
+            var criterion = new Criterion(has401K, Yes);
 
             var answer = profile.answerFor(criterion);
 
-            assertEquals(answer, True);
+            assertEquals(answer, Yes);
         }
 
         @Test
         void throwsWhenAddingDuplicateAnswer() {
-            profile.answer(has401K, True);
+            profile.answer(has401K, Yes);
             var questionWithDuplicateId = new YesNoQuestion(has401K.id(), "?");
 
             assertThrows(DuplicateQuestionException.class,
-                    () -> profile.answer(questionWithDuplicateId, False));
+                    () -> profile.answer(questionWithDuplicateId, No));
         }
     }
 

@@ -9,6 +9,6 @@ public record Criterion(Question question, Answer expectedAnswer, boolean isOpti
     }
 
     public boolean isMetBy(Answer answer) {
-        return answer != null && expectedAnswer().value().equals(answer.value());
+        return answer != null && expectedAnswer().equals(answer);
     }
 }

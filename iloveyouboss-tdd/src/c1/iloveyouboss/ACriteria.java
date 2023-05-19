@@ -5,15 +5,15 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static iloveyouboss.answers.TrueFalse.False;
-import static iloveyouboss.answers.TrueFalse.True;
+import static iloveyouboss.answers.YesNo.No;
+import static iloveyouboss.answers.YesNo.Yes;
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ACriteria {
-    Criterion criterion1 = new Criterion(new YesNoQuestion(1, "?"), True);
-    Criterion criterion2 = new Criterion(new YesNoQuestion(2, "?"), False);
-    Criterion criterion3 = new Criterion(new YesNoQuestion(3, "?"), False);
+    Criterion criterion1 = new Criterion(new YesNoQuestion(1, "?"), Yes);
+    Criterion criterion2 = new Criterion(new YesNoQuestion(2, "?"), No);
+    Criterion criterion3 = new Criterion(new YesNoQuestion(3, "?"), No);
 
     @Test
     void holdsACollectionOfCriterion() {

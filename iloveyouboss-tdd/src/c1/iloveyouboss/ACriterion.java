@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Nested;
 
 import java.util.List;
 
-import static iloveyouboss.answers.TrueFalse.False;
-import static iloveyouboss.answers.TrueFalse.True;
+import static iloveyouboss.answers.YesNo.No;
+import static iloveyouboss.answers.YesNo.Yes;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -20,23 +20,23 @@ class ACriterion {
 
         @Test
         void isNotMetByNullAnswer() {
-            var criterion = new Criterion(question, True);
+            var criterion = new Criterion(question, Yes);
 
             assertFalse(criterion.isMetBy(null));
         }
 
         @Test
         void isMetByAnswerMatchingItsExpectedAnswer() {
-            var criterion = new Criterion(question, True);
+            var criterion = new Criterion(question, Yes);
 
-            assertTrue(criterion.isMetBy(True));
+            assertTrue(criterion.isMetBy(Yes));
         }
 
         @Test
         void isNotMetByAnswerMismatchingItsExpectedAnswer() {
-            var criterion = new Criterion(question, True);
+            var criterion = new Criterion(question, Yes);
 
-            assertFalse(criterion.isMetBy(False));
+            assertFalse(criterion.isMetBy(No));
         }
     }
 

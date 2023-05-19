@@ -1,10 +1,10 @@
 package iloveyouboss.answers;
 
-public enum TrueFalse implements Answer<Boolean> {
-    True {
+public enum YesNo implements Answer<Boolean> {
+    Yes {
        public Boolean value() { return true; }
     },
-    False {
+    No {
         public Boolean value() { return false; }
     };
 }
