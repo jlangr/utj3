@@ -3,8 +3,8 @@ package iloveyouboss;
 import iloveyouboss.questions.ChoiceQuestion;
 import iloveyouboss.questions.Question;
 import iloveyouboss.questions.YesNoQuestion;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -14,35 +14,35 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ACriterion {
-    @Nested
-    class WithABooleanQuestion {
-        Question question = new YesNoQuestion(1, "?");
+   @Nested
+   class WithABooleanQuestion {
+      Question question = new YesNoQuestion(1, "?");
 
-        @Test
-        void isNotMetByNullAnswer() {
-            var criterion = new Criterion(question, Yes);
+      @Test
+      void isNotMetByNullAnswer() {
+         var criterion = new Criterion(question, Yes);
 
-            assertFalse(criterion.isMetBy(null));
-        }
+         assertFalse(criterion.isMetBy(null));
+      }
 
-        @Test
-        void isMetByAnswerMatchingItsExpectedAnswer() {
-            var criterion = new Criterion(question, Yes);
+      @Test
+      void isMetByAnswerMatchingItsExpectedAnswer() {
+         var criterion = new Criterion(question, Yes);
 
-            assertTrue(criterion.isMetBy(Yes));
-        }
+         assertTrue(criterion.isMetBy(Yes));
+      }
 
-        @Test
-        void isNotMetByAnswerMismatchingItsExpectedAnswer() {
-            var criterion = new Criterion(question, Yes);
+      @Test
+      void isNotMetByAnswerMismatchingItsExpectedAnswer() {
+         var criterion = new Criterion(question, Yes);
 
-            assertFalse(criterion.isMetBy(No));
-        }
-    }
+         assertFalse(criterion.isMetBy(No));
+      }
+   }
 
-    @Nested
-    class WithAChoiceQuestion {
-        Question question = new ChoiceQuestion(1, "?", List.of("eeny", "meeny", "miny", "moe"));
+   @Nested
+   class WithAChoiceQuestion {
+      Question question = new ChoiceQuestion(1, "?", List.of("eeny", "meeny", "miny", "moe"));
 
 //        @Test
 //        void isNotMetByNullAnswer() {
@@ -64,5 +64,5 @@ class ACriterion {
 //
 //            assertFalse(criterion.isMetBy(new Answer(false)));
 //        }
-    }
+   }
 }

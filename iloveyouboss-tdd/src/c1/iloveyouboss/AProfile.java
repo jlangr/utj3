@@ -2,10 +2,11 @@ package iloveyouboss;
 
 import iloveyouboss.questions.Question;
 import iloveyouboss.questions.YesNoQuestion;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
-import static iloveyouboss.answers.YesNo.*;
+import static iloveyouboss.answers.YesNo.No;
+import static iloveyouboss.answers.YesNo.Yes;
 import static org.junit.jupiter.api.Assertions.*;
 
 /* basis for explanatory prose:
@@ -23,107 +24,106 @@ import static org.junit.jupiter.api.Assertions.*;
 
  */
 
-// TODO: other types of questions
+// TODO: tests involving multiple types of questions
 
 class AProfile {
-    Profile profile = new Profile();
-    Question hasRelo = new YesNoQuestion(1, "Has relocation package?");
-    Question has401K = new YesNoQuestion(2, "Has 401K?");
-    Question hasSmelt = new YesNoQuestion(3, "got smelt?");
+   Profile profile = new Profile();
+   Question hasRelo = new YesNoQuestion(1, "Has relocation package?");
+   Question has401K = new YesNoQuestion(2, "Has 401K?");
+   Question hasSmelt = new YesNoQuestion(3, "got smelt?");
 
-    Criterion mustHaveRelo = new Criterion(hasRelo, Yes);
-    Criterion mustHave401K = new Criterion(has401K, Yes);
-    Criterion optionallyHasSmeltShouldBeTrue = new Criterion(hasSmelt, Yes, true);
+   Criterion mustHaveRelo = new Criterion(hasRelo, Yes);
+   Criterion mustHave401K = new Criterion(has401K, Yes);
+   Criterion optionallyHasSmeltShouldBeTrue = new Criterion(hasSmelt, Yes, true);
 
-    @Nested
-    class WhenDeterminingMatches {
-        @Test
-        void doesNotMatchWhenProfileHasNoAnswers() {
-            var criteria = new Criteria(new Criterion(hasRelo, Yes));
+   @Nested
+   class WhenDeterminingMatches {
+      @Test
+      void doesNotMatchWhenProfileHasNoAnswers() {
+         var criteria = new Criteria(new Criterion(hasRelo, Yes));
 
-            assertFalse(profile.matches(criteria));
-        }
+         assertFalse(profile.matches(criteria));
+      }
 
-        @Test
-        void doesNotMatchWhenAllCriteriaNotMet() {
+      @Test
+      void doesNotMatchWhenAllCriteriaNotMet() {
+         profile.answer(hasRelo, Yes);
+         profile.answer(has401K, No);
+
+         assertFalse(profile.matches(new Criteria(mustHaveRelo, mustHave401K)));
+      }
+
+      @Nested
+      class WithAllQuestionsAnsweredYes {
+         @Test
+         void matchesWhenAllCriteriaMet() {
             profile.answer(hasRelo, Yes);
-            profile.answer(has401K, No);
-
-            assertFalse(profile.matches(
-                    new Criteria(mustHaveRelo, mustHave401K)));
-        }
-
-        @Nested
-        class WithAllQuestionsAnsweredYes {
-            @Test
-            void matchesWhenAllCriteriaMet() {
-                profile.answer(hasRelo, Yes);
-                profile.answer(has401K, Yes);
-
-                assertTrue(profile.matches(new Criteria(mustHaveRelo, mustHave401K)));
-            }
-
-            @Test
-            void matchesDespiteUnmetOptionalCriterion() {
-                var optionalCriterion = new Criterion(hasSmelt, Yes, true);
-                var criteria = new Criteria(mustHaveRelo, optionalCriterion);
-                profile.answer(hasSmelt, No);
-                profile.answer(hasRelo, Yes);
-
-                assertTrue(profile.matches(criteria));
-            }
-
-            // TDD would not usually demand this test
-            @Test
-            void stillMatchesWithOnlyMismatchedOptionalCriteria() {
-                var criteria = new Criteria(optionallyHasSmeltShouldBeTrue);
-                profile.answer(hasSmelt, No);
-
-                assertTrue(profile.matches(criteria));
-            }
-        }
-    }
-
-    @Nested
-    class WhenManagingAnswers {
-        @Test
-        void returnsNullWhenAskedForNonexistentAnswer() {
-            assertNull(profile.answerFor(mustHave401K));
-        }
-
-        @Test
-        void returnsAnswerForCorrespondingCriterionQuestion() {
             profile.answer(has401K, Yes);
-            var criterion = new Criterion(has401K, Yes);
 
-            var answer = profile.answerFor(criterion);
+            assertTrue(profile.matches(new Criteria(mustHaveRelo, mustHave401K)));
+         }
 
-            assertEquals(answer, Yes);
-        }
+         @Test
+         void matchesDespiteUnmetOptionalCriterion() {
+            var optionalCriterion = new Criterion(hasSmelt, Yes, true);
+            var criteria = new Criteria(mustHaveRelo, optionalCriterion);
+            profile.answer(hasSmelt, No);
+            profile.answer(hasRelo, Yes);
 
-        @Test
-        void throwsWhenAddingDuplicateAnswer() {
-            profile.answer(has401K, Yes);
-            var questionWithDuplicateId = new YesNoQuestion(has401K.id(), "?");
+            assertTrue(profile.matches(criteria));
+         }
 
-            assertThrows(DuplicateQuestionException.class,
-                    () -> profile.answer(questionWithDuplicateId, No));
-        }
-    }
+         // TDD would not usually demand this test
+         @Test
+         void stillMatchesWithOnlyMismatchedOptionalCriteria() {
+            var criteria = new Criteria(optionallyHasSmeltShouldBeTrue);
+            profile.answer(hasSmelt, No);
 
-    @Nested
-    class Score {
-        @Test
-        void isZeroWhenNoCriteriaMet() {
-            var criteria = new Criteria(mustHaveRelo);
-            assertEquals(0, profile.score(criteria));
-        }
+            assertTrue(profile.matches(criteria));
+         }
+      }
+   }
 
-        @Test
-        void isCriteriaWeightWhenSoleCriterionMet() {
-            var criteria = new Criteria(mustHaveRelo);
+   @Nested
+   class WhenManagingAnswers {
+      @Test
+      void returnsNullWhenAskedForNonexistentAnswer() {
+         assertNull(profile.answerFor(mustHave401K));
+      }
 
-            assertEquals(0, profile.score(criteria));
-        }
-    }
+      @Test
+      void returnsAnswerForCorrespondingCriterionQuestion() {
+         profile.answer(has401K, Yes);
+         var criterion = new Criterion(has401K, Yes);
+
+         var answer = profile.answerFor(criterion);
+
+         assertEquals(answer, Yes);
+      }
+
+      @Test
+      void throwsWhenAddingDuplicateAnswer() {
+         profile.answer(has401K, Yes);
+         var questionWithDuplicateId = new YesNoQuestion(has401K.id(), "?");
+
+         assertThrows(DuplicateQuestionException.class,
+            () -> profile.answer(questionWithDuplicateId, No));
+      }
+   }
+
+   @Nested
+   class Score {
+      @Test
+      void isZeroWhenNoCriteriaMet() {
+         var criteria = new Criteria(mustHaveRelo);
+         assertEquals(0, profile.score(criteria));
+      }
+
+      @Test
+      void isCriteriaWeightWhenSoleCriterionMet() {
+         var criteria = new Criteria(mustHaveRelo);
+
+         assertEquals(0, profile.score(criteria));
+      }
+   }
 }
