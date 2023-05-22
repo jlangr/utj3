@@ -1,5 +1,6 @@
 package iloveyouboss;
 
+import iloveyouboss.answers.YesNo;
 import iloveyouboss.questions.YesNoQuestion;
 import org.junit.jupiter.api.Test;
 
@@ -11,9 +12,9 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ACriteria {
-   Criterion criterion1 = new Criterion(new YesNoQuestion(1, "?"), Yes);
-   Criterion criterion2 = new Criterion(new YesNoQuestion(2, "?"), No);
-   Criterion criterion3 = new Criterion(new YesNoQuestion(3, "?"), No);
+   Criterion<YesNo> criterion1 = new Criterion<>(new YesNoQuestion(1, "?"), Yes);
+   Criterion<YesNo> criterion2 = new Criterion<>(new YesNoQuestion(2, "?"), No);
+   Criterion<YesNo> criterion3 = new Criterion<>(new YesNoQuestion(3, "?"), No);
 
    @Test
    void holdsACollectionOfCriterion() {
@@ -39,7 +40,7 @@ class ACriteria {
       assertEquals(listOfCriterion(criteria), List.of(criterion1, criterion2, criterion3));
    }
 
-   private static List<Criterion> listOfCriterion(Criteria criteria) {
+   private static List<Criterion<?>> listOfCriterion(Criteria criteria) {
       return criteria.stream().collect(toList());
    }
 }

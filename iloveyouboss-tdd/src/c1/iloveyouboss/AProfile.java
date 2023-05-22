@@ -1,6 +1,6 @@
 package iloveyouboss;
 
-import iloveyouboss.questions.Question;
+import iloveyouboss.answers.YesNo;
 import iloveyouboss.questions.YesNoQuestion;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,23 +24,21 @@ import static org.junit.jupiter.api.Assertions.*;
 
  */
 
-// TODO: tests involving multiple types of questions
-
 class AProfile {
    Profile profile = new Profile();
-   Question hasRelo = new YesNoQuestion(1, "Has relocation package?");
-   Question has401K = new YesNoQuestion(2, "Has 401K?");
-   Question hasSmelt = new YesNoQuestion(3, "got smelt?");
+   YesNoQuestion hasRelo = new YesNoQuestion(1, "Has relocation package?");
+   YesNoQuestion has401K = new YesNoQuestion(2, "Has 401K?");
+   YesNoQuestion hasSmelt = new YesNoQuestion(3, "got smelt?");
 
-   Criterion mustHaveRelo = new Criterion(hasRelo, Yes);
-   Criterion mustHave401K = new Criterion(has401K, Yes);
-   Criterion optionallyHasSmeltShouldBeTrue = new Criterion(hasSmelt, Yes, true);
+   Criterion<YesNo> mustHaveRelo = new Criterion<>(hasRelo, Yes);
+   Criterion<YesNo> mustHave401K = new Criterion<>(has401K, Yes);
+   Criterion<YesNo> optionallyHasSmeltShouldBeTrue = new Criterion<>(hasSmelt, Yes, true);
 
    @Nested
    class WhenDeterminingMatches {
       @Test
       void doesNotMatchWhenProfileHasNoAnswers() {
-         var criteria = new Criteria(new Criterion(hasRelo, Yes));
+         var criteria = new Criteria(new Criterion<>(hasRelo, Yes));
 
          assertFalse(profile.matches(criteria));
       }
@@ -65,7 +63,7 @@ class AProfile {
 
          @Test
          void matchesDespiteUnmetOptionalCriterion() {
-            var optionalCriterion = new Criterion(hasSmelt, Yes, true);
+            var optionalCriterion = new Criterion<>(hasSmelt, Yes, true);
             var criteria = new Criteria(mustHaveRelo, optionalCriterion);
             profile.answer(hasSmelt, No);
             profile.answer(hasRelo, Yes);
@@ -73,7 +71,6 @@ class AProfile {
             assertTrue(profile.matches(criteria));
          }
 
-         // TDD would not usually demand this test
          @Test
          void stillMatchesWithOnlyMismatchedOptionalCriteria() {
             var criteria = new Criteria(optionallyHasSmeltShouldBeTrue);
@@ -94,7 +91,7 @@ class AProfile {
       @Test
       void returnsAnswerForCorrespondingCriterionQuestion() {
          profile.answer(has401K, Yes);
-         var criterion = new Criterion(has401K, Yes);
+         var criterion = new Criterion<>(has401K, Yes);
 
          var answer = profile.answerFor(criterion);
 
@@ -113,6 +110,7 @@ class AProfile {
 
    @Nested
    class Score {
+      // TODO In progress
       @Test
       void isZeroWhenNoCriteriaMet() {
          var criteria = new Criteria(mustHaveRelo);

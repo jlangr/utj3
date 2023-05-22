@@ -1,5 +1,8 @@
 package iloveyouboss.questions;
 
-public interface Question {
+import java.util.List;
+
+public interface Question<AnswerType> {
    int id();
+   List<String> options();
 }

@@ -1,5 +1,6 @@
 package iloveyouboss;
 
+import iloveyouboss.answers.YesNo;
 import iloveyouboss.questions.ChoiceQuestion;
 import iloveyouboss.questions.Question;
 import iloveyouboss.questions.YesNoQuestion;
@@ -16,25 +17,25 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ACriterion {
    @Nested
    class WithABooleanQuestion {
-      Question question = new YesNoQuestion(1, "?");
+      Question<YesNo> question = new YesNoQuestion(1, "?");
 
       @Test
       void isNotMetByNullAnswer() {
-         var criterion = new Criterion(question, Yes);
+         var criterion = new Criterion<>(question, Yes);
 
          assertFalse(criterion.isMetBy(null));
       }
 
       @Test
       void isMetByAnswerMatchingItsExpectedAnswer() {
-         var criterion = new Criterion(question, Yes);
+         var criterion = new Criterion<>(question, Yes);
 
          assertTrue(criterion.isMetBy(Yes));
       }
 
       @Test
       void isNotMetByAnswerMismatchingItsExpectedAnswer() {
-         var criterion = new Criterion(question, Yes);
+         var criterion = new Criterion<>(question, Yes);
 
          assertFalse(criterion.isMetBy(No));
       }
@@ -42,21 +43,21 @@ class ACriterion {
 
    @Nested
    class WithAChoiceQuestion {
-      Question question = new ChoiceQuestion(1, "?", List.of("eeny", "meeny", "miny", "moe"));
+      Question<String> question = new ChoiceQuestion(1, "?", List.of("eeny", "meeny", "miny", "moe"));
 
-//        @Test
-//        void isNotMetByNullAnswer() {
-//            var criterion = new Criterion(question, true);
-//
-//            assertFalse(criterion.isMetBy(null));
-//        }
-//
-//        @Test
-//        void isMetByAnswerMatchingItsExpectedAnswer() {
-//            var criterion = new Criterion(question, true);
-//
-//            assertTrue(criterion.isMetBy(new Answer(true)));
-//        }
+        @Test
+        void isNotMetByNullAnswer() {
+            var criterion = new Criterion<>(question, "moe");
+
+            assertFalse(criterion.isMetBy(null));
+        }
+
+        @Test
+        void isMetByAnswerMatchingItsExpectedAnswer() {
+            var criterion = new Criterion<>(question, "eeny");
+
+            assertTrue(criterion.isMetBy("eeny"));
+        }
 //
 //        @Test
 //        void isNotMetByAnswerMismatchingItsExpectedAnswer() {
