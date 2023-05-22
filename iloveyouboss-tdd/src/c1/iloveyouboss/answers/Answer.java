@@ -1,5 +1,5 @@
 package iloveyouboss.answers;
 
-public interface Answer<T> {
-   T value();
+public interface Answer {
+   Object value();
 }

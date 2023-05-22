@@ -1,4 +1,4 @@
 package iloveyouboss.answers;
 
-public record Choice(String value) implements Answer<String> {
+public record Choice(String value) implements Answer {
 }

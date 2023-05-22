@@ -1,6 +1,6 @@
 package iloveyouboss.answers;
 
-public enum YesNo implements Answer<Boolean> {
+public enum YesNo implements Answer {
    Yes {
       public Boolean value() {
          return true;
