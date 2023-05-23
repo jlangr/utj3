@@ -10,9 +10,14 @@ import java.util.List;
 import static iloveyouboss.answers.YesNo.No;
 import static iloveyouboss.answers.YesNo.Yes;
 
-public record YesNoQuestion(int id, String text) implements Question<YesNo> {
+public record YesNoQuestion(int id, String text) implements Question {
    @Override
    public List<String> options() {
       return List.of(Yes.toString(), No.toString());
+   }
+
+   @Override
+   public Class<?> answerType() {
+      return YesNo.class;
    }
 }

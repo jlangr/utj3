@@ -30,15 +30,15 @@ class AProfile {
    YesNoQuestion has401K = new YesNoQuestion(2, "Has 401K?");
    YesNoQuestion hasSmelt = new YesNoQuestion(3, "got smelt?");
 
-   Criterion<YesNo> mustHaveRelo = new Criterion<>(hasRelo, Yes);
-   Criterion<YesNo> mustHave401K = new Criterion<>(has401K, Yes);
-   Criterion<YesNo> optionallyHasSmeltShouldBeTrue = new Criterion<>(hasSmelt, Yes, true);
+   Criterion mustHaveRelo = new Criterion(hasRelo, Yes);
+   Criterion mustHave401K = new Criterion(has401K, Yes);
+   Criterion optionallyHasSmeltShouldBeTrue = new Criterion(hasSmelt, Yes, true);
 
    @Nested
    class WhenDeterminingMatches {
       @Test
       void doesNotMatchWhenProfileHasNoAnswers() {
-         var criteria = new Criteria(new Criterion<>(hasRelo, Yes));
+         var criteria = new Criteria(new Criterion(hasRelo, Yes));
 
          assertFalse(profile.matches(criteria));
       }
@@ -63,7 +63,7 @@ class AProfile {
 
          @Test
          void matchesDespiteUnmetOptionalCriterion() {
-            var optionalCriterion = new Criterion<>(hasSmelt, Yes, true);
+            var optionalCriterion = new Criterion(hasSmelt, Yes, true);
             var criteria = new Criteria(mustHaveRelo, optionalCriterion);
             profile.answer(hasSmelt, No);
             profile.answer(hasRelo, Yes);
@@ -91,7 +91,7 @@ class AProfile {
       @Test
       void returnsAnswerForCorrespondingCriterionQuestion() {
          profile.answer(has401K, Yes);
-         var criterion = new Criterion<>(has401K, Yes);
+         var criterion = new Criterion(has401K, Yes);
 
          var answer = profile.answerFor(criterion);
 

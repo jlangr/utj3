@@ -14,14 +14,14 @@ public class Profile {
          .allMatch(criterion -> criterion.isMetBy(answerFor(criterion)));
    }
 
-   public <T> void answer(Question<T> question, T answer) {
+   public  void answer(Question question, Object answer) {
       if (answers.containsKey(question.id()))
          throw new DuplicateQuestionException();
       answers.put(question.id(), answer);
    }
 
-   public <T> T answerFor(Criterion<T> criterion) {
-      return (T)answers.get(criterion.question().id());
+   public Object answerFor(Criterion criterion) {
+      return answers.get(criterion.question().id());
    }
 
    public int score(Criteria criteria) {

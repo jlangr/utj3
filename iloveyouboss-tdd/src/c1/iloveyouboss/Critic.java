@@ -2,8 +2,8 @@ package iloveyouboss;
 
 import iloveyouboss.questions.Question;
 
-public record Criterion(Question question, Object expectedAnswer, boolean isOptional) {
-   public Criterion(Question question, Object expectedAnswer) {
+public record Critic<T>(Question question, T expectedAnswer, boolean isOptional) {
+   public Critic(Question question, T expectedAnswer) {
       this(question, expectedAnswer, false);
    }
 

@@ -5,16 +5,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public record Criteria(List<Criterion> criteria) {
-   public Criteria(Criterion... criteria) {
+public record CriticCollection(List<Critic<?>> criteria) {
+   public CriticCollection(Critic<?>... criteria) {
       this(new ArrayList<>(Arrays.asList(criteria)));
    }
 
-   public Stream<? extends Criterion> stream() {
+   public Stream<? extends Critic<?>> stream() {
       return criteria.stream();
    }
 
-   public void add(Criterion criterion) {
+   public void add(Critic<?> criterion) {
       criteria.add(criterion);
    }
 }
