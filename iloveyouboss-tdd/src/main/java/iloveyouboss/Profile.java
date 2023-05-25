@@ -1,10 +1,11 @@
 package iloveyouboss;
 
-import iloveyouboss.answers.Answer;
 import iloveyouboss.questions.Question;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static iloveyouboss.Answer.NotProvided;
 
 public class Profile {
    Map<Integer, Answer<?>> answers = new HashMap<>();
@@ -22,10 +23,6 @@ public class Profile {
    }
 
    public <T> Answer<?> answerFor(Criterion<T> criterion) {
-      return answers.get(criterion.question().id());
-   }
-
-   public int score(Criteria criteria) {
-      return 0;
+      return answers.getOrDefault(criterion.question().id(), NotProvided);
    }
 }

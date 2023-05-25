@@ -1,20 +1,22 @@
 package iloveyouboss;
 
-import iloveyouboss.answers.YesNo;
+import iloveyouboss.questions.YesNo;
 import iloveyouboss.questions.YesNoQuestion;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static iloveyouboss.answers.YesNo.No;
-import static iloveyouboss.answers.YesNo.Yes;
+import static iloveyouboss.questions.YesNo.No;
+import static iloveyouboss.questions.YesNo.Yes;
+import static iloveyouboss.questions.YesNoAnswers.NoAnswer;
+import static iloveyouboss.questions.YesNoAnswers.YesAnswer;
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ACriteria {
-   Criterion<YesNo> criterion1 = new Criterion<>(new YesNoQuestion(1, "?"), () -> Yes);
-   Criterion<YesNo> criterion2 = new Criterion<>(new YesNoQuestion(2, "?"), () -> No);
-   Criterion<YesNo> criterion3 = new Criterion<>(new YesNoQuestion(3, "?"), () -> No);
+   Criterion<YesNo> criterion1 = new Criterion<>(new YesNoQuestion(1, "?"), YesAnswer);
+   Criterion<YesNo> criterion2 = new Criterion<>(new YesNoQuestion(2, "?"), NoAnswer);
+   Criterion<YesNo> criterion3 = new Criterion<>(new YesNoQuestion(3, "?"), NoAnswer);
 
    @Test
    void holdsACollectionOfCriterion() {

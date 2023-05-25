@@ -5,39 +5,30 @@ import iloveyouboss.questions.YesNoQuestion;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 
-import static iloveyouboss.answers.YesNo.No;
-import static iloveyouboss.answers.YesNo.Yes;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static iloveyouboss.questions.YesNoAnswers.NoAnswer;
+import static iloveyouboss.questions.YesNoAnswers.YesAnswer;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ACriterion {
    @Nested
    class WithABooleanQuestion {
       YesNoQuestion question = new YesNoQuestion(1, "?");
 
-      // TODO null vs null?
-
-      @Test
-      void isNotMetByNullAnswer() {
-         var criterion = new Criterion<>(question, () -> Yes);
-
-         assertFalse(criterion.isMetBy(null));
-      }
-
       @Test
       void isMetByAnswerMatchingItsExpectedAnswer() {
-         var criterion = new Criterion<>(question, () -> Yes);
+         var criterion = new Criterion<>(question, YesAnswer);
 
-         assertTrue(criterion.isMetBy(() -> Yes));
+         assertTrue(criterion.isMetBy(YesAnswer));
       }
 
       @Test
       void isNotMetByAnswerMismatchingItsExpectedAnswer() {
-         var criterion = new Criterion<>(question, () -> Yes);
+         var criterion = new Criterion<>(question, YesAnswer);
 
-         assertFalse(criterion.isMetBy(() -> No));
+         assertFalse(criterion.isMetBy(NoAnswer));
       }
    }
 
@@ -45,25 +36,28 @@ class ACriterion {
    class WithAChoiceQuestion {
       ChoiceQuestion question = new ChoiceQuestion(1, "?", List.of("eeny", "meeny", "miny", "moe"));
 
-        @Test
-        void isNotMetByNullAnswer() {
-            var criterion = new Criterion<>(question, () -> "moe");
+      @Test
+      void isMetByAnswerMatchingItsExpectedAnswer() {
+         var criterion = new Criterion<>(question, () -> "eeny");
 
-            assertFalse(criterion.isMetBy(null));
-        }
+         assertTrue(criterion.isMetBy(() -> "eeny"));
+      }
 
-        @Test
-        void isMetByAnswerMatchingItsExpectedAnswer() {
-            var criterion = new Criterion<>(question, () -> "eeny");
+      @Test
+      void isNotMetByAnswerMismatchingItsExpectedAnswer() {
+         var criterion = new Criterion<>(question, () -> "meeny");
 
-            assertTrue(criterion.isMetBy(() -> "eeny"));
-        }
+         assertFalse(criterion.isMetBy(() -> "moe"));
+      }
 
-        @Test
-        void isNotMetByAnswerMismatchingItsExpectedAnswer() {
-            var criterion = new Criterion<>(question, () -> "meeny");
+      @Test
+      void throwsWhenAnswerDoesNotMatchAvailableChoices() {
+         var criterion = new Criterion<>(
+            new ChoiceQuestion(1, "?", Collections.singletonList("correct")),
+            () -> "correct");
+         Answer<String> answerOutOfRange = () -> "anything else";
 
-            assertFalse(criterion.isMetBy(() -> "moe"));
-        }
+         assertThrows(InvalidAnswerException.class, () -> criterion.isMetBy(answerOutOfRange));
+      }
    }
 }
