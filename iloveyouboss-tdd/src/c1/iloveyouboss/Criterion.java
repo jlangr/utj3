@@ -1,13 +1,14 @@
 package iloveyouboss;
 
+import iloveyouboss.answers.Answer;
 import iloveyouboss.questions.Question;
 
-public record Criterion(Question question, Object expectedAnswer, boolean isOptional) {
-   public Criterion(Question question, Object expectedAnswer) {
+public record Criterion<T>(Question<T> question, Answer<T> expectedAnswer, boolean isOptional) {
+   public Criterion(Question<T> question, Answer<T> expectedAnswer) {
       this(question, expectedAnswer, false);
    }
 
-   public boolean isMetBy(Object answer) {
-      return expectedAnswer().equals(answer);
+   public boolean isMetBy(Answer<?> answer) {
+      return answer != null && expectedAnswer().value().equals(answer.value());
    }
 }

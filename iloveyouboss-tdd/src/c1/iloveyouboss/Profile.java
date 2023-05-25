@@ -1,12 +1,13 @@
 package iloveyouboss;
 
+import iloveyouboss.answers.Answer;
 import iloveyouboss.questions.Question;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Profile {
-   Map<Integer, Object> answers = new HashMap<>();
+   Map<Integer, Answer<?>> answers = new HashMap<>();
 
    public boolean matches(Criteria criteria) {
       return criteria.stream()
@@ -14,13 +15,13 @@ public class Profile {
          .allMatch(criterion -> criterion.isMetBy(answerFor(criterion)));
    }
 
-   public  void answer(Question question, Object answer) {
+   public <T> void answer(Question<T> question, Answer<T> answer) {
       if (answers.containsKey(question.id()))
          throw new DuplicateQuestionException();
       answers.put(question.id(), answer);
    }
 
-   public Object answerFor(Criterion criterion) {
+   public <T> Answer<?> answerFor(Criterion<T> criterion) {
       return answers.get(criterion.question().id());
    }
 

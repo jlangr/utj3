@@ -12,9 +12,9 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ACriteria {
-   Criterion criterion1 = new Criterion(new YesNoQuestion(1, "?"), Yes);
-   Criterion criterion2 = new Criterion(new YesNoQuestion(2, "?"), No);
-   Criterion criterion3 = new Criterion(new YesNoQuestion(3, "?"), No);
+   Criterion<YesNo> criterion1 = new Criterion<>(new YesNoQuestion(1, "?"), () -> Yes);
+   Criterion<YesNo> criterion2 = new Criterion<>(new YesNoQuestion(2, "?"), () -> No);
+   Criterion<YesNo> criterion3 = new Criterion<>(new YesNoQuestion(3, "?"), () -> No);
 
    @Test
    void holdsACollectionOfCriterion() {

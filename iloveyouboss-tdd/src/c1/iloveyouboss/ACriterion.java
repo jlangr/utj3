@@ -17,53 +17,55 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ACriterion {
    @Nested
    class WithABooleanQuestion {
-      Question question = new YesNoQuestion(1, "?");
+      YesNoQuestion question = new YesNoQuestion(1, "?");
+
+      // TODO null vs null?
 
       @Test
       void isNotMetByNullAnswer() {
-         var criterion = new Criterion(question, Yes);
+         var criterion = new Criterion<>(question, () -> Yes);
 
          assertFalse(criterion.isMetBy(null));
       }
 
       @Test
       void isMetByAnswerMatchingItsExpectedAnswer() {
-         var criterion = new Criterion(question, Yes);
+         var criterion = new Criterion<>(question, () -> Yes);
 
-         assertTrue(criterion.isMetBy(Yes));
+         assertTrue(criterion.isMetBy(() -> Yes));
       }
 
       @Test
       void isNotMetByAnswerMismatchingItsExpectedAnswer() {
-         var criterion = new Criterion(question, Yes);
+         var criterion = new Criterion<>(question, () -> Yes);
 
-         assertFalse(criterion.isMetBy(No));
+         assertFalse(criterion.isMetBy(() -> No));
       }
    }
 
    @Nested
    class WithAChoiceQuestion {
-      Question question = new ChoiceQuestion(1, "?", List.of("eeny", "meeny", "miny", "moe"));
+      ChoiceQuestion question = new ChoiceQuestion(1, "?", List.of("eeny", "meeny", "miny", "moe"));
 
         @Test
         void isNotMetByNullAnswer() {
-            var criterion = new Criterion(question, "moe");
+            var criterion = new Criterion<>(question, () -> "moe");
 
             assertFalse(criterion.isMetBy(null));
         }
 
         @Test
         void isMetByAnswerMatchingItsExpectedAnswer() {
-            var criterion = new Criterion(question, "eeny");
+            var criterion = new Criterion<>(question, () -> "eeny");
 
-            assertTrue(criterion.isMetBy("eeny"));
+            assertTrue(criterion.isMetBy(() -> "eeny"));
         }
-//
-//        @Test
-//        void isNotMetByAnswerMismatchingItsExpectedAnswer() {
-//            var criterion = new Criterion(question, true);
-//
-//            assertFalse(criterion.isMetBy(new Answer(false)));
-//        }
+
+        @Test
+        void isNotMetByAnswerMismatchingItsExpectedAnswer() {
+            var criterion = new Criterion<>(question, () -> "meeny");
+
+            assertFalse(criterion.isMetBy(() -> "moe"));
+        }
    }
 }
