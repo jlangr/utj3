@@ -1,15 +1,15 @@
 package iloveyouboss;
 
-import iloveyouboss.questions.ChoiceQuestion;
-import iloveyouboss.questions.YesNoQuestion;
+import iloveyouboss.questions.choice.ChoiceQuestion;
+import iloveyouboss.questions.yesno.YesNoQuestion;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
 
-import static iloveyouboss.questions.YesNoAnswers.NoAnswer;
-import static iloveyouboss.questions.YesNoAnswers.YesAnswer;
+import static iloveyouboss.questions.yesno.YesNoAnswers.NoAnswer;
+import static iloveyouboss.questions.yesno.YesNoAnswers.YesAnswer;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ACriterion {

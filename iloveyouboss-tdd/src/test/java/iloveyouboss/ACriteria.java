@@ -1,15 +1,13 @@
 package iloveyouboss;
 
-import iloveyouboss.questions.YesNo;
-import iloveyouboss.questions.YesNoQuestion;
+import iloveyouboss.questions.yesno.YesNo;
+import iloveyouboss.questions.yesno.YesNoQuestion;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static iloveyouboss.questions.YesNo.No;
-import static iloveyouboss.questions.YesNo.Yes;
-import static iloveyouboss.questions.YesNoAnswers.NoAnswer;
-import static iloveyouboss.questions.YesNoAnswers.YesAnswer;
+import static iloveyouboss.questions.yesno.YesNoAnswers.NoAnswer;
+import static iloveyouboss.questions.yesno.YesNoAnswers.YesAnswer;
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

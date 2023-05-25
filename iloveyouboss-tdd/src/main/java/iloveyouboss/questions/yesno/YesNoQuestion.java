@@ -1,13 +1,14 @@
-package iloveyouboss.questions;
+package iloveyouboss.questions.yesno;
+
+import iloveyouboss.questions.Question;
 
 import java.util.List;
 
-import static iloveyouboss.questions.YesNo.No;
-import static iloveyouboss.questions.YesNo.Yes;
+import static java.util.Arrays.asList;
 
 public record YesNoQuestion(int id, String text) implements Question<YesNo> {
    @Override
    public List<YesNo> options() {
-      return List.of(Yes, No);
+      return asList(YesNo.values());
    }
 }

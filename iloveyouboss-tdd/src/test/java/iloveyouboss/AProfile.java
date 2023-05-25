@@ -1,11 +1,11 @@
 package iloveyouboss;
 
-import iloveyouboss.questions.YesNo;
-import iloveyouboss.questions.YesNoQuestion;
+import iloveyouboss.questions.yesno.YesNo;
+import iloveyouboss.questions.yesno.YesNoQuestion;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import static iloveyouboss.questions.YesNoAnswers.NoAnswer;
-import static iloveyouboss.questions.YesNoAnswers.YesAnswer;
+import static iloveyouboss.questions.yesno.YesNoAnswers.NoAnswer;
+import static iloveyouboss.questions.yesno.YesNoAnswers.YesAnswer;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AProfile {

@@ -1,4 +1,6 @@
-package iloveyouboss.questions;
+package iloveyouboss.questions.choice;
+
+import iloveyouboss.questions.Question;
 
 import java.util.List;
 

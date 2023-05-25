@@ -1,9 +1,9 @@
-package iloveyouboss.questions;
+package iloveyouboss.questions.yesno;
 
 import iloveyouboss.Answer;
 
-import static iloveyouboss.questions.YesNo.No;
-import static iloveyouboss.questions.YesNo.Yes;
+import static iloveyouboss.questions.yesno.YesNo.No;
+import static iloveyouboss.questions.yesno.YesNo.Yes;
 
 public enum YesNoAnswers implements Answer<YesNo> {
    YesAnswer {
