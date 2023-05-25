@@ -40,7 +40,7 @@ class ACriteria {
       assertEquals(listOfCriterion(criteria), List.of(criterion1, criterion2, criterion3));
    }
 
-   private static List<Criterion> listOfCriterion(Criteria criteria) {
+   private static List<Criterion<?>> listOfCriterion(Criteria criteria) {
       return criteria.stream().collect(toList());
    }
 }

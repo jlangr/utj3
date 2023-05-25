@@ -9,21 +9,6 @@ import static iloveyouboss.answers.YesNo.No;
 import static iloveyouboss.answers.YesNo.Yes;
 import static org.junit.jupiter.api.Assertions.*;
 
-/* basis for explanatory prose:
- A Question consists of text and type (e.g. boolean -> yes/no)
-     Questions are uniquely identified by their ID. (The ID is likely generated in some service-level code.)
-
- An Answer is a question plus the stringValue that is true
-
- A Profile is a bunch of Answers (to Questions). eg: Does a relocation package exist -> yes
-     A Profile might not have an Answer to any given Question.
-
- A Criterion is a Question plus the desired Answer to that question.
- Criterion might be optional.
- An interested party sets up criteria ("many criterion") to determine to what extent they match a profile.
-
- */
-
 class AProfile {
    Profile profile = new Profile();
    YesNoQuestion hasRelo = new YesNoQuestion(1, "Has relocation package?");
@@ -105,23 +90,6 @@ class AProfile {
 
          assertThrows(DuplicateQuestionException.class,
             () -> profile.answer(questionWithDuplicateId, () -> No));
-      }
-   }
-
-   @Nested
-   class Score {
-      // TODO In progress
-      @Test
-      void isZeroWhenNoCriteriaMet() {
-         var criteria = new Criteria(mustHaveRelo);
-         assertEquals(0, profile.score(criteria));
-      }
-
-      @Test
-      void isCriteriaWeightWhenSoleCriterionMet() {
-         var criteria = new Criteria(mustHaveRelo);
-
-         assertEquals(0, profile.score(criteria));
       }
    }
 }

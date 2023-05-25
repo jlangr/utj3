@@ -1,8 +1,6 @@
 package iloveyouboss;
 
-import iloveyouboss.answers.YesNo;
 import iloveyouboss.questions.ChoiceQuestion;
-import iloveyouboss.questions.Question;
 import iloveyouboss.questions.YesNoQuestion;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
